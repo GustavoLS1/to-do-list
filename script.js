@@ -5,26 +5,39 @@ const botonEnter = document.querySelector("#enter");
 const check = 'fa-check-circle';
 const uncheck = 'fa-circle'; 
 const lineThrough = 'line-through'
-const id = 0
+let id = 0
 
 //Funcion agregar tarea
 function agregarTarea(tarea,id,realizado,eliminado) {
 
-    const REALIZADO = realizado
+    if(eliminado){return}
+
+    const REALIZADO = realizado ? check : uncheck
+    const LINE = realizado ? lineThrough : ''
 
   const elemento = `
                     <li id="elemento">
-                    <i class="far fa-circle" data="realizado" id="${id}"></i>
-                    <p class="text line-through">${tarea}</p>
+                    <i class="far ${REALIZADO}" data="realizado" id="${id}"></i>
+                    <p class="text ${LINE}">${tarea}</p>
                     <i class="fas fa-trash de" data="eliminado" id="${id}"></i>
                     </li>
                     `;
     lista.insertAdjacentHTML("beforeend", elemento)                
 }
 
-console.log(agregarTarea)
+//funcion de tarea realizada
 
+function tareaRealizada(element){
+    element.classList.toggle(check);
+    element.classList.toggle(uncheck);
+    console.log(element.classList);
+}
 
+//funcion eliminar tarea realizada
+function tareaEliminada(element){
+    const tarea = element.parentElement;
+    tarea.remove();    
+}
 
 
 botonEnter.addEventListener('click',()=> {
@@ -46,3 +59,15 @@ document.addEventListener('keyup', function(event){
         id++
     }
 }) 
+
+lista.addEventListener('click', function(event){
+    const element = event.target
+    const elementData = element.attributes.data.value
+    if(elementData ==='realizado'){
+        tareaRealizada(element)
+    }
+    else if(elementData==='eliminado'){
+        tareaEliminada(element)
+    }
+    
+})
